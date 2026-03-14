@@ -6,5 +6,8 @@ export const USER_TYPES = {
 
 export const AUTH_TYPES = {
   SignupController: Symbol.for("SignupController"),
-  SignupService: Symbol.for('SignupService')
+  SignupService: Symbol.for("SignupService"),
+
+  AuthController: Symbol.for("AuthController"),
+  AuthService: Symbol.for("AuthService"),
 };

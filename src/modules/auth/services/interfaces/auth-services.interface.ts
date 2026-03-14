@@ -1,11 +1,19 @@
+import { Response } from "express";
 import { IOtpTimeLeft } from "../../interfaces/response.interface";
+import { LoginDto } from "../../schemas/login.schema";
 import {
   OptUpdatesDto,
   OtpVarifyDto,
   SignupDto,
 } from "../../schemas/signup.schema";
 
-export interface IAuthService {}
+export interface IAuthService {
+  // login
+  login(res: Response, dto: LoginDto): Promise<string>;
+  // logout
+  logout(res: Response): string;
+  // login user data
+}
 
 export interface ISignupService {
   // signupUser
@@ -15,5 +23,5 @@ export interface ISignupService {
   // resend otp
   resendOtp(dto: OptUpdatesDto): Promise<string>;
   // get otp time left
-  getOtpTimeLeft(dto: OptUpdatesDto): Promise<IOtpTimeLeft>
+  getOtpTimeLeft(dto: OptUpdatesDto): Promise<IOtpTimeLeft>;
 }
