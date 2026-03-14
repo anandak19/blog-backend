@@ -10,6 +10,7 @@ export class SignupController {
     return ResponseHandler.successMessage(res, "Otp send");
   }
   // varify otp
+  
   // resend otp
   // get otp remaining time
 }
