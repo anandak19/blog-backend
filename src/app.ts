@@ -3,10 +3,13 @@ import "reflect-metadata";
 import appRoutes from "./routes/index.routes";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 app.use("/api", appRoutes);
 

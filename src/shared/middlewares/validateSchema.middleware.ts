@@ -25,7 +25,6 @@ const ValidateSchema = (
         new AppError(
           `${field}: ${firstError.message}`,
           HTTP_STATUS.BAD_REQUEST,
-          req.baseUrl,
         ),
       );
     }

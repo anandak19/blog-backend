@@ -1,0 +1,121 @@
+import { inject, injectable } from "inversify";
+import {
+  OptUpdatesDto,
+  OtpVarifyDto,
+  SignupDto,
+} from "../schemas/signup.schema";
+import { ISignupService } from "./interfaces/auth-services.interface";
+import { LIB_TYPES } from "../../../lib/lib.types";
+import {
+  IOtpCache,
+  IRedisService,
+  IUserCache,
+} from "../../../lib/cache/redis-service.interface";
+import { IEmailService } from "../../../lib/email/email-service-interface";
+import { generateOtpHtml } from "../../../shared/constants/email-template";
+import { USER_TYPES } from "../../../container/types";
+import { IUserService } from "../../user/services/interfaces/user-service.interface";
+import { AppError } from "../../../shared/errors/app-error";
+import { HTTP_STATUS } from "../../../shared/constants/http-status.constat";
+import { IOtpTimeLeft } from "../interfaces/response.interface";
+
+@injectable()
+export class SignupService implements ISignupService {
+  constructor(
+    @inject(LIB_TYPES.OtpCacheService) private _otpCache: IOtpCache,
+    @inject(LIB_TYPES.UserCacheService) private _userCache: IUserCache,
+    @inject(LIB_TYPES.EmailService) private _email: IEmailService,
+    @inject(USER_TYPES.UserService) private _userService: IUserService,
+  ) {}
+
+  async getOtpTimeLeft(dto: OptUpdatesDto): Promise<IOtpTimeLeft> {
+    const timeLeft = await this._otpCache.getOtpTimeLeft(dto.email);
+
+    return { timeLeft };
+  }
+
+  // resend otp
+  async resendOtp(dto: OptUpdatesDto): Promise<string> {
+    const timeLeft = await this._otpCache.getOtpTimeLeft(dto.email);
+    if (timeLeft > 0) {
+      throw new AppError(
+        `${timeLeft}s left to resend`,
+        HTTP_STATUS.BAD_REQUEST,
+      );
+    }
+
+    const currUser = await this._userCache.getCacheUser(dto.email);
+    if (!currUser) {
+      throw new AppError(
+        "Signup session expired! Try agin",
+        HTTP_STATUS.FORBIDDEN,
+      );
+    }
+
+    const otp = this._generateOtp();
+
+    this._email.sendEmail({
+      html: generateOtpHtml(otp),
+      recipient: dto.email,
+      subject: "Varify Your Email",
+    });
+
+    await this._otpCache.cacheOtp(dto.email, otp);
+
+    return "New otp is sent";
+  }
+
+  // verify otp
+  async varifyOtp(dto: OtpVarifyDto): Promise<string> {
+    const currUser = await this._userCache.getCacheUser(dto.email);
+    if (!currUser) {
+      throw new AppError(
+        "Signup session expired! Try agin",
+        HTTP_STATUS.FORBIDDEN,
+      );
+    }
+
+    const otp = await this._otpCache.getCachedOtp(dto.email);
+    if (!otp) {
+      throw new AppError("Otp expired", HTTP_STATUS.BAD_REQUEST);
+    }
+
+    if (otp !== dto.otp) {
+      throw new AppError("Invalid Otp", HTTP_STATUS.BAD_REQUEST);
+    }
+
+    this._userCache.deleteUser(dto.email);
+
+    await this._userService.create(currUser);
+
+    return "User signup success";
+  }
+
+  // varify user data and send otp
+  async signup(user: SignupDto): Promise<string> {
+    const exists = await this._userService.isEmailExists(user.email);
+    if (exists) {
+      throw new AppError("User Exists", HTTP_STATUS.CONFLICT);
+    }
+    const otp = this._generateOtp();
+
+    this._email.sendEmail({
+      html: generateOtpHtml(otp),
+      recipient: user.email,
+      subject: "Varify Your Email",
+    });
+
+    await Promise.all([
+      this._otpCache.cacheOtp(user.email, otp),
+      this._userCache.cacheUser(user.email, user),
+    ]);
+
+    return "Otp sent";
+  }
+
+  private _generateOtp(): string {
+    return Math.floor(100000 + Math.random() * 900000)
+      .toString()
+      .substring(0, 4);
+  }
+}

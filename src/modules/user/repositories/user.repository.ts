@@ -2,7 +2,6 @@ import { injectable } from "inversify";
 import userModel, { IUser, ICreateUser } from "../models/user.model";
 import { IUserRepository } from "./interface/user-repository.interface";
 
-
 @injectable()
 export class UserRepository implements IUserRepository {
   getUsers(): IUser[] {
@@ -11,5 +10,9 @@ export class UserRepository implements IUserRepository {
 
   create(user: ICreateUser): Promise<IUser> {
     return userModel.create(user);
+  }
+
+  findOneByEmail(email: string): Promise<IUser | null> {
+    return userModel.findOne({ email });
   }
 }

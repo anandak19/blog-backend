@@ -5,7 +5,7 @@ export const emailTransport = () => {
   const transport = nodemailer.createTransport({
     host: appConfig.SMTP_HOST,
     port: Number(appConfig.SMTP_PORT),
-    secure: appConfig.NODE_ENV === "dev", // in case it did't work at production, change to false(hardcode)
+    secure: false,
     auth: {
       user: appConfig.SMTP_FROM,
       pass: appConfig.SMTP_PASS,
