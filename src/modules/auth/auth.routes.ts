@@ -10,16 +10,27 @@ import {
 } from "./schemas/signup.schema";
 import { AuthController } from "./controllers/auth.controller";
 import { loginSchema } from "./schemas/login.schema";
+import { IJwtService } from "../../lib/jwt/jwt-service.interface";
+import { LIB_TYPES } from "../../lib/lib.types";
+import { authMiddleware } from "../../shared/middlewares/auth.middleware";
 
 const authRoute = Router();
 
+// controllers
 const signupController = container.get<SignupController>(
   AUTH_TYPES.SignupController,
 );
-
 const authController = container.get<AuthController>(AUTH_TYPES.AuthController);
 
+// services
+const jwtService = container.get<IJwtService>(LIB_TYPES.JwtService);
+
+// routes
 authRoute.post("/login", ValidateSchema(loginSchema), authController.login);
+
+authRoute.post("/logout", authController.logout);
+
+authRoute.get("/me", authMiddleware(jwtService), authController.getLoginUser);
 
 authRoute.post(
   "/signup/data",

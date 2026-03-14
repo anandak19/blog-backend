@@ -6,6 +6,8 @@ import {
   OtpVarifyDto,
   SignupDto,
 } from "../../schemas/signup.schema";
+import { IUserData } from "../../../user/interface/user.interface";
+import { IAuthenticatedRequest } from "../../../../shared/interfaces/overrides.interface";
 
 export interface IAuthService {
   // login
@@ -13,6 +15,7 @@ export interface IAuthService {
   // logout
   logout(res: Response): string;
   // login user data
+  getLoginUser(req: IAuthenticatedRequest): IUserData;
 }
 
 export interface ISignupService {

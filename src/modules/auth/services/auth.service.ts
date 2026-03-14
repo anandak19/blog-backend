@@ -7,6 +7,10 @@ import { LIB_TYPES } from "../../../lib/lib.types";
 import { IJwtService } from "../../../lib/jwt/jwt-service.interface";
 import { ICookieService } from "../../../lib/cookie/cookie-service.interface";
 import { Response } from "express";
+import { IAuthenticatedRequest } from "../../../shared/interfaces/overrides.interface";
+import { IUserData } from "../../user/interface/user.interface";
+import { AppError } from "../../../shared/errors/app-error";
+import { HTTP_STATUS } from "../../../shared/constants/http-status.constat";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -16,6 +20,14 @@ export class AuthService implements IAuthService {
     @inject(LIB_TYPES.JwtService) private _jwtService: IJwtService,
     @inject(LIB_TYPES.CookieService) private _cookieService: ICookieService,
   ) {}
+
+  getLoginUser(req: IAuthenticatedRequest): IUserData {
+    if (!req.user) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
+
+    return req.user;
+  }
 
   async login(res: Response, dto: LoginDto): Promise<string> {
     const user = await this._userService.comparePassword(dto);
