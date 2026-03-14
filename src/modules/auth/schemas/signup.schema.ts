@@ -20,7 +20,7 @@ export const otpVarifySchema = z.object({
 });
 
 export const optUpdatesSchema = z.object({
-  emai: z.email(),
+  email: z.email(),
 });
 
 export type SignupDto = z.infer<typeof signupSchema>;

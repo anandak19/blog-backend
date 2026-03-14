@@ -16,9 +16,10 @@ export const errorHandler = (
     message,
     statusCode,
     success: false,
-    path: err.path,
+    path: req.baseUrl,
     timestamp: new Date().toISOString(),
   };
+  console.log(err);
 
   res.status(statusCode).json(errorResponse);
 };
