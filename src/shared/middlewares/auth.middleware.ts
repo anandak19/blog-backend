@@ -45,6 +45,7 @@ export const authMiddleware = (jwtService: IJwtService) => {
         email: decode.email,
         firstName: decode.firstName,
         lastName: decode.lastName,
+        id: decode.id,
       };
       next();
     } catch (error) {

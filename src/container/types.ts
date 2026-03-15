@@ -17,7 +17,6 @@ export const BLOG_TYPES = {
   UserBlogController: Symbol.for("UserBlogController"),
 
   BlogService: Symbol.for("BlogService"),
-  UserBlogService: Symbol.for("UserBlogService"),
 
   BlogRepository: Symbol.for("BlogRepository"),
 };

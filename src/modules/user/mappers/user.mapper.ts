@@ -7,6 +7,7 @@ export class UserMapper {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      id: user._id.toString(),
     };
   }
 }

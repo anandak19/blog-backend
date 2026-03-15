@@ -1,6 +1,10 @@
 import { ContainerModule, ContainerModuleLoadOptions } from "inversify";
 
-import { IOtpCache, IRedisService, IUserCache } from "./cache/redis-service.interface";
+import {
+  IOtpCache,
+  IRedisService,
+  IUserCache,
+} from "./cache/redis-service.interface";
 import { LIB_TYPES } from "./lib.types";
 import { RedisService } from "./cache/redis.service";
 import { IEmailService } from "./email/email-service-interface";
@@ -13,6 +17,8 @@ import { ICookieService } from "./cookie/cookie-service.interface";
 import { CookieService } from "./cookie/cookie.service";
 import { OtpCacheService } from "./cache/otp-cache.service";
 import { UserCacheService } from "./cache/user-cache.service";
+import { IS3Service } from "./s3/s3-services.interface";
+import { S3Service } from "./s3/s3.service";
 
 const libBindings = new ContainerModule(
   (option: ContainerModuleLoadOptions) => {
@@ -27,6 +33,8 @@ const libBindings = new ContainerModule(
     option.bind<IJwtService>(LIB_TYPES.JwtService).to(JwtService);
 
     option.bind<ICookieService>(LIB_TYPES.CookieService).to(CookieService);
+
+    option.bind<IS3Service>(LIB_TYPES.S3Service).to(S3Service);
   },
 );
 
