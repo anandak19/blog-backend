@@ -1,3 +1,4 @@
+
 import app from "./app";
 import { appConfig } from "./config/app.config";
 import connectDB from "./config/db.config";

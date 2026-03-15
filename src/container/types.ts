@@ -11,3 +11,13 @@ export const AUTH_TYPES = {
   AuthController: Symbol.for("AuthController"),
   AuthService: Symbol.for("AuthService"),
 };
+
+export const BLOG_TYPES = {
+  BlogController: Symbol.for("BlogController"),
+  UserBlogController: Symbol.for("UserBlogController"),
+
+  BlogService: Symbol.for("BlogService"),
+  UserBlogService: Symbol.for("UserBlogService"),
+
+  BlogRepository: Symbol.for("BlogRepository"),
+};
