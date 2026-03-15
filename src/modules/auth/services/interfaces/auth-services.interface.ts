@@ -1,13 +1,10 @@
+import { IUserData } from "@/modules/user/interface/user.interface";
+import { IAuthenticatedRequest } from "@/shared/interfaces/overrides.interface";
 import { Response } from "express";
-import { IOtpTimeLeft } from "../../interfaces/response.interface";
 import { LoginDto } from "../../schemas/login.schema";
-import {
-  OptUpdatesDto,
-  OtpVarifyDto,
-  SignupDto,
-} from "../../schemas/signup.schema";
-import { IUserData } from "../../../user/interface/user.interface";
-import { IAuthenticatedRequest } from "../../../../shared/interfaces/overrides.interface";
+import { SignupDto, OtpVarifyDto, OptUpdatesDto } from "../../schemas/signup.schema";
+import { IOtpTimeLeft } from "../../interfaces/response.interface";
+
 
 export interface IAuthService {
   // login

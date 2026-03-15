@@ -1,6 +1,7 @@
+import { appConfig } from "@/config/app.config";
 import { Response } from "express";
 import { ICookieService } from "./cookie-service.interface";
-import { appConfig } from "../../config/app.config";
+
 
 export const COOKIE_KEY = "access-token";
 

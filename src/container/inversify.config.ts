@@ -1,8 +1,9 @@
 import { Container } from "inversify";
-import { userBindings } from "../modules/user/bindings/user.bindings";
-import { authBindings } from "../modules/auth/bindings/auth.bindings";
-import { libBindings } from "../lib/lib.bindings";
-import { middlewareBinding } from "../shared/middlewares/middleware.binding";
+
+import { middlewareBinding } from "@/shared/middlewares/middleware.binding";
+import { libBindings } from "@/lib/lib.bindings";
+import { authBindings } from "@/modules/auth/bindings/auth.bindings";
+import { userBindings } from "@/modules/user/bindings/user.bindings";
 
 const container = new Container();
 

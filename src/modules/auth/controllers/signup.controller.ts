@@ -1,8 +1,9 @@
+import { AUTH_TYPES } from "@/container/types";
+import { ResponseHandler } from "@/shared/utils/response-handler";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { ResponseHandler } from "../../../shared/utils/response-handler";
-import { AUTH_TYPES } from "../../../container/types";
 import { ISignupService } from "../services/interfaces/auth-services.interface";
+
 
 @injectable()
 export class SignupController {

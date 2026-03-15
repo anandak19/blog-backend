@@ -1,9 +1,9 @@
 import express from "express";
 import "reflect-metadata";
-import appRoutes from "./routes/index.routes";
-import { errorHandler } from "./shared/middlewares/error.middleware";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import appRoutes from "./routes/index.routes";
+import { errorHandler } from "./shared/middlewares/error.middleware";
 
 const app = express();
 app.use(bodyParser.json());

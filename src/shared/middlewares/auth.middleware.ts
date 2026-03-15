@@ -1,12 +1,13 @@
+import { COOKIE_KEY } from "@/lib/cookie/cookie.service";
+import { IJwtService } from "@/lib/jwt/jwt-service.interface";
+import { LIB_TYPES } from "@/lib/lib.types";
+import { IUserData } from "@/modules/user/interface/user.interface";
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../errors/app-error";
+import { injectable, inject } from "inversify";
 import { HTTP_STATUS } from "../constants/http-status.constat";
-import { inject, injectable } from "inversify";
-import { LIB_TYPES } from "../../lib/lib.types";
-import { IJwtService } from "../../lib/jwt/jwt-service.interface";
+import { AppError } from "../errors/app-error";
 import { IAuthenticatedRequest } from "../interfaces/overrides.interface";
-import { IUserData } from "../../modules/user/interface/user.interface";
-import { COOKIE_KEY } from "../../lib/cookie/cookie.service";
+
 
 @injectable()
 export class AuthMiddeware {

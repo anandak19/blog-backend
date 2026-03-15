@@ -1,7 +1,8 @@
+import { BLOG_TYPES } from "@/container/types";
 import { ContainerModule, ContainerModuleLoadOptions } from "inversify";
 import { BlogController } from "../controllers/blog.controller";
-import { BLOG_TYPES } from "../../../container/types";
 import { UserBlogController } from "../controllers/user-blog.controller";
+
 
 export const blogBindings = new ContainerModule(
   (options: ContainerModuleLoadOptions) => {

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { AUTH_TYPES } from "../../../container/types";
+import { AUTH_TYPES } from "@/container/types";
+import { IAuthenticatedRequest } from "@/shared/interfaces/overrides.interface";
+import { ResponseHandler } from "@/shared/utils/response-handler";
 import { IAuthService } from "../services/interfaces/auth-services.interface";
-import { ResponseHandler } from "../../../shared/utils/response-handler";
-import { IAuthenticatedRequest } from "../../../shared/interfaces/overrides.interface";
 
 @injectable()
 export class AuthController {
