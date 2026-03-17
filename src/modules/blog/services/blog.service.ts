@@ -9,7 +9,7 @@ import { BLOG_TYPES } from "@/container/types";
 import { IBlogRepository } from "../repositories/interfaces/blog-repositories.interface";
 import { ICreateBlog } from "../models/blog.model";
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
-import { IListBlog } from "../interfaces/blog.interface";
+import { IBlogDetails, IListBlog } from "../interfaces/blog.interface";
 import { QueryParamDto } from "../schemas/query.schema";
 
 @injectable()
@@ -40,6 +40,20 @@ export class BlogService implements IBlogService {
       documents: documentsWithImages,
       meta,
     };
+  }
+
+  async findOneBlogDetails(id: string): Promise<IBlogDetails> {
+    const blog = await this._blogRepo.findOneJoined(id);
+    if (!blog) {
+      throw new AppError("Blog Not found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    const imageUrl = await this._s3Service.getSignedUrl(blog.image)
+
+    return {
+      ...blog,
+      image: imageUrl
+    }
   }
 
   async create(

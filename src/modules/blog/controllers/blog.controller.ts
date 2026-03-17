@@ -17,5 +17,11 @@ export class BlogController {
     const result = await this._blogService.findAll(query);
     return ResponseHandler.success(res, result);
   };
+  
   // view one blog
+  findOne = async (req: Request, res: Response) => {
+    const id = req.validated.param as string;
+    const result = await this._blogService.findOneBlogDetails(id);
+    return ResponseHandler.success(res, result);
+  };
 }

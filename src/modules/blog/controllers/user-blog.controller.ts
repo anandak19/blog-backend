@@ -32,7 +32,7 @@ export class UserBlogController {
     const result = await this._blogService.findAll(query, req.user?.id);
     return ResponseHandler.success(res, result);
   };
-  // view my one blog in detaild
+  
   // delete my one blog
   // update my one blog
 }

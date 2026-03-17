@@ -3,7 +3,11 @@ import { IBlogRepository } from "./interfaces/blog-repositories.interface";
 import blogModel, { ICreateBlog, IBlog } from "../models/blog.model";
 import { PipelineStage, QueryFilter, Types } from "mongoose";
 import { QueryParamDto } from "../schemas/query.schema";
-import { IFindAllRepoRes, IListBlog } from "../interfaces/blog.interface";
+import {
+  IBlogDetails,
+  IFindAllRepoRes,
+  IListBlog,
+} from "../interfaces/blog.interface";
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
 
 @injectable("Singleton")
@@ -117,5 +121,44 @@ export class BlogRepository implements IBlogRepository {
         total: totalBlogs,
       },
     };
+  }
+
+  async findOneJoined(id: string): Promise<IBlogDetails> {
+    const pipelineStage: PipelineStage[] = [
+      {
+        $match: {
+          _id: new Types.ObjectId(id),
+          isDeleted: false,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: "$userDetails",
+      },
+      {
+        $project: {
+          id: {
+            $toString: "$_id",
+          },
+          _id: 0,
+          title: 1,
+          image: 1,
+          content: 1,
+          writerName: {
+            $concat: ["$userDetails.firstName", " ", "$userDetails.lastName"],
+          },
+          createdAt: 1,
+        },
+      },
+    ];
+    const [result] = await blogModel.aggregate<IBlogDetails>(pipelineStage)
+    return result
   }
 }

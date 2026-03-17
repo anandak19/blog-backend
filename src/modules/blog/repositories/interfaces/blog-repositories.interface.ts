@@ -1,5 +1,5 @@
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
-import { IListBlog } from "../../interfaces/blog.interface";
+import { IBlogDetails, IListBlog } from "../../interfaces/blog.interface";
 import { IBlog, ICreateBlog } from "../../models/blog.model";
 import { QueryParamDto } from "../../schemas/query.schema";
 
@@ -18,4 +18,6 @@ export interface IBlogRepository {
     paginationQuery: QueryParamDto,
     userId?: string,
   ): Promise<IPaginatedResult<IListBlog>>;
+
+  findOneJoined(id: string): Promise<IBlogDetails>;
 }

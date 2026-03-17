@@ -36,6 +36,8 @@ const ValidateSchema = (
       validated.query = result.data;
     } else if (source === ValidationSource.BODY) {
       validated.body = result.data;
+    }else if (source === ValidationSource.PARAM) {
+      validated.param = result.data;
     }
 
     req.validated = validated;

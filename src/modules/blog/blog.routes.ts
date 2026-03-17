@@ -15,6 +15,7 @@ import {
 } from "@/shared/middlewares/auth.middleware";
 import { queryParamSchema } from "./schemas/query.schema";
 import { BlogController } from "./controllers/blog.controller";
+import { paramsIdSchema } from "./schemas/param.schem";
 
 const blogRoute = Router();
 
@@ -32,9 +33,15 @@ blogRoute.get(
   blogController.findAll,
 );
 
+blogRoute.get(
+  "/:id",
+  ValidateSchema(paramsIdSchema, ValidationSource.PARAM),
+  blogController.findOne,
+);
+
 blogRoute.post(
   "/user/create",
-  authMiddleware(jwtService), 
+  authMiddleware(jwtService),
   upload.single("image"),
   ValidateSchema(createBlogSchema),
   userBlogController.createBlog,
