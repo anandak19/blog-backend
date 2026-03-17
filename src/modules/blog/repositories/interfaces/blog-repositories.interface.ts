@@ -20,4 +20,6 @@ export interface IBlogRepository {
   ): Promise<IPaginatedResult<IListBlog>>;
 
   findOneJoined(id: string): Promise<IBlogDetails>;
+
+  softDeleteOneById(blogId: string, userId: string): Promise<boolean>
 }

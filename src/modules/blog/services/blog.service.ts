@@ -8,7 +8,10 @@ import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
 import { BLOG_TYPES } from "@/container/types";
 import { IBlogRepository } from "../repositories/interfaces/blog-repositories.interface";
 import { ICreateBlog } from "../models/blog.model";
-import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
+import {
+  IBaseResponse,
+  IPaginatedResult,
+} from "@/shared/interfaces/http-response.interface";
 import { IBlogDetails, IListBlog } from "../interfaces/blog.interface";
 import { QueryParamDto } from "../schemas/query.schema";
 
@@ -18,6 +21,17 @@ export class BlogService implements IBlogService {
     @inject(LIB_TYPES.S3Service) private _s3Service: IS3Service,
     @inject(BLOG_TYPES.BlogRepository) private _blogRepo: IBlogRepository,
   ) {}
+
+  async deleteOneById(blogId: string, userId: string): Promise<string> {
+
+    const isDeleted = await this._blogRepo.softDeleteOneById(blogId, userId);
+    if (!isDeleted) {
+      console.log("not del");
+      throw new AppError("Blog Not Found", HTTP_STATUS.NOT_FOUND);
+    }
+
+    return "Blog Deleted";
+  }
 
   async findAll(
     pagination: QueryParamDto,
@@ -48,12 +62,12 @@ export class BlogService implements IBlogService {
       throw new AppError("Blog Not found", HTTP_STATUS.NOT_FOUND);
     }
 
-    const imageUrl = await this._s3Service.getSignedUrl(blog.image)
+    const imageUrl = await this._s3Service.getSignedUrl(blog.image);
 
     return {
       ...blog,
-      image: imageUrl
-    }
+      image: imageUrl,
+    };
   }
 
   async create(
@@ -65,19 +79,11 @@ export class BlogService implements IBlogService {
       throw new AppError("Image is required", HTTP_STATUS.BAD_REQUEST);
     }
     const exist = await this._blogRepo.findOneByTitle(blogData.title, userId);
-    console.log(exist);
     if (exist) {
       throw new AppError("You already have a blog with this title");
     }
 
     const key = await this._s3Service.upload(file);
-
-    /**
-     * create new blog object with key, title, content, userId
-     */
-    console.log(userId);
-    console.log(blogData);
-    console.log(key);
 
     const createBlog: ICreateBlog = {
       title: blogData.title,

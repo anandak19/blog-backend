@@ -9,6 +9,7 @@ import {
   IListBlog,
 } from "../interfaces/blog.interface";
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
+import { AppError } from "@/shared/errors/app-error";
 
 @injectable("Singleton")
 export class BlogRepository implements IBlogRepository {
@@ -32,6 +33,7 @@ export class BlogRepository implements IBlogRepository {
   }
 
   findOneById(id: string): Promise<IBlog | null> {
+    this.isValidObjectId(id);
     return blogModel.findById(id);
   }
 
@@ -124,6 +126,7 @@ export class BlogRepository implements IBlogRepository {
   }
 
   async findOneJoined(id: string): Promise<IBlogDetails> {
+    this.isValidObjectId(id);
     const pipelineStage: PipelineStage[] = [
       {
         $match: {
@@ -158,7 +161,29 @@ export class BlogRepository implements IBlogRepository {
         },
       },
     ];
-    const [result] = await blogModel.aggregate<IBlogDetails>(pipelineStage)
-    return result
+    const [result] = await blogModel.aggregate<IBlogDetails>(pipelineStage);
+    return result;
+  }
+
+  async softDeleteOneById(blogId: string, userId: string): Promise<boolean> {
+    this.isValidObjectId(blogId);
+    this.isValidObjectId(userId);
+
+    const result = await blogModel.updateOne(
+      {
+        _id: new Types.ObjectId(blogId),
+        userId: new Types.ObjectId(userId),
+        isDeleted: false,
+      },
+      { $set: { isDeleted: true } },
+    );
+
+    return result.modifiedCount > 0;
+  }
+
+  private isValidObjectId(id: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new AppError("Invalid Id");
+    }
   }
 }

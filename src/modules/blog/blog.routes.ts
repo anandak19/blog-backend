@@ -51,7 +51,14 @@ blogRoute.get(
   "/user",
   authMiddleware(jwtService),
   ValidateSchema(queryParamSchema, ValidationSource.QUERY),
-  userBlogController.findAllUsers,
+  userBlogController.findAllUsersBlog,
+);
+
+blogRoute.delete(
+  "/user/:id",
+  authMiddleware(jwtService),
+  ValidateSchema(paramsIdSchema, ValidationSource.PARAM),
+  userBlogController.deleteOneBlog,
 );
 
 export default blogRoute;

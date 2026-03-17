@@ -4,6 +4,7 @@ import { inject, injectable } from "inversify";
 import { IBlogService } from "../services/interfaces/blog-service.interface";
 import { QueryParamDto } from "../schemas/query.schema";
 import { ResponseHandler } from "@/shared/utils/response-handler";
+import { ParamsDto } from "../schemas/param.schem";
 
 @injectable()
 export class BlogController {
@@ -17,11 +18,11 @@ export class BlogController {
     const result = await this._blogService.findAll(query);
     return ResponseHandler.success(res, result);
   };
-  
+
   // view one blog
   findOne = async (req: Request, res: Response) => {
-    const id = req.validated.param as string;
-    const result = await this._blogService.findOneBlogDetails(id);
+    const param = req.validated.param as ParamsDto;
+    const result = await this._blogService.findOneBlogDetails(param.id);
     return ResponseHandler.success(res, result);
   };
 }
