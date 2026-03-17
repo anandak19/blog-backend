@@ -11,7 +11,7 @@ import { inject, injectable } from "inversify";
 import { LoginDto } from "../schemas/login.schema";
 import { IAuthService } from "./interfaces/auth-services.interface";
 import { Response } from "express";
-
+import { IBaseResponse } from "@/shared/interfaces/http-response.interface";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -30,7 +30,7 @@ export class AuthService implements IAuthService {
     return req.user;
   }
 
-  async login(res: Response, dto: LoginDto): Promise<string> {
+  async login(res: Response, dto: LoginDto): Promise<IUserData> {
     const user = await this._userService.comparePassword(dto);
     const token = this._jwtService.getSignedToken(
       user,
@@ -38,7 +38,7 @@ export class AuthService implements IAuthService {
     );
     this._cookieService.setCookie(res, token, this.tokenExpirationtime);
 
-    return "Login successfull";
+    return user;
   }
 
   logout(res: Response): string {

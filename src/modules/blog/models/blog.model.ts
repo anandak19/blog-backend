@@ -6,6 +6,7 @@ export interface IBlog extends Document, ITimeStamp {
   image: string;
   content: string;
   userId: mongoose.Types.ObjectId;
+  isDeleted: boolean;
 }
 
 export interface ICreateBlog extends Pick<

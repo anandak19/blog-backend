@@ -1,4 +1,7 @@
+import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
 import { CreateBlogDto } from "../../schemas/blog.schema";
+import { QueryParamDto } from "../../schemas/query.schema";
+import { IListBlog } from "../../interfaces/blog.interface";
 
 export interface IBlogService {
   create(
@@ -6,4 +9,6 @@ export interface IBlogService {
     blogData: CreateBlogDto,
     file: Express.Multer.File | undefined,
   ): Promise<string>;
+
+  findAll(pagination: QueryParamDto, userId?: string): Promise<IPaginatedResult<IListBlog>>;
 }

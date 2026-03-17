@@ -4,6 +4,7 @@ import { AUTH_TYPES } from "@/container/types";
 import { IAuthenticatedRequest } from "@/shared/interfaces/overrides.interface";
 import { ResponseHandler } from "@/shared/utils/response-handler";
 import { IAuthService } from "../services/interfaces/auth-services.interface";
+import { LoginDto } from "../schemas/login.schema";
 
 @injectable()
 export class AuthController {
@@ -12,8 +13,9 @@ export class AuthController {
   ) {}
   // login
   login = async (req: Request, res: Response) => {
-    const result = await this._authService.login(res, req.body);
-    return ResponseHandler.successMessage(res, result);
+    const loginData = req.validated.body as LoginDto
+    const result = await this._authService.login(res, loginData);
+    return ResponseHandler.success(res, result, "Login Success");
   };
 
   // logout

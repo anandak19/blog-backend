@@ -8,6 +8,9 @@ import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
 import { BLOG_TYPES } from "@/container/types";
 import { IBlogRepository } from "../repositories/interfaces/blog-repositories.interface";
 import { ICreateBlog } from "../models/blog.model";
+import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
+import { IListBlog } from "../interfaces/blog.interface";
+import { QueryParamDto } from "../schemas/query.schema";
 
 @injectable()
 export class BlogService implements IBlogService {
@@ -15,6 +18,29 @@ export class BlogService implements IBlogService {
     @inject(LIB_TYPES.S3Service) private _s3Service: IS3Service,
     @inject(BLOG_TYPES.BlogRepository) private _blogRepo: IBlogRepository,
   ) {}
+
+  async findAll(
+    pagination: QueryParamDto,
+    userId?: string,
+  ): Promise<IPaginatedResult<IListBlog>> {
+    const { documents, meta } = await this._blogRepo.findAll(
+      pagination,
+      userId,
+    );
+
+    const documentsWithImages = await Promise.all(
+      documents.map(async (item) => {
+        const imageUrl = await this._s3Service.getSignedUrl(item.image);
+
+        return { ...item, image: imageUrl };
+      }),
+    );
+
+    return {
+      documents: documentsWithImages,
+      meta,
+    };
+  }
 
   async create(
     userId: string,

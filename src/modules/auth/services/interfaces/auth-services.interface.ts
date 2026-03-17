@@ -8,7 +8,7 @@ import { IOtpTimeLeft } from "../../interfaces/response.interface";
 
 export interface IAuthService {
   // login
-  login(res: Response, dto: LoginDto): Promise<string>;
+  login(res: Response, dto: LoginDto): Promise<IUserData>;
   // logout
   logout(res: Response): string;
   // login user data

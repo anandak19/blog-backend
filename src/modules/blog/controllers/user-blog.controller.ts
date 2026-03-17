@@ -7,6 +7,7 @@ import { BLOG_TYPES } from "@/container/types";
 import { IBlogService } from "../services/interfaces/blog-service.interface";
 import { ResponseHandler } from "@/shared/utils/response-handler";
 import { IAuthenticatedRequest } from "@/shared/interfaces/overrides.interface";
+import { QueryParamDto } from "../schemas/query.schema";
 
 @injectable()
 export class UserBlogController {
@@ -20,15 +21,17 @@ export class UserBlogController {
     req: IAuthenticatedRequest<CreateBlogDto>,
     res: Response,
   ) => {
-    const result = await this._blogService.create(
-      req.user!.id,
-      req.body,
-      req.file,
-    );
+    const blog = req.validated.body as CreateBlogDto;
+    const result = await this._blogService.create(req.user!.id, blog, req.file);
     return ResponseHandler.successMessage(res, result);
   };
 
   // view my blogs
+  findAllUsers = async (req: IAuthenticatedRequest, res: Response) => {
+    const query = req.validated?.query as QueryParamDto;
+    const result = await this._blogService.findAll(query, req.user?.id);
+    return ResponseHandler.success(res, result);
+  };
   // view my one blog in detaild
   // delete my one blog
   // update my one blog
