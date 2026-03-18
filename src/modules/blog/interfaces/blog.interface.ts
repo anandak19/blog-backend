@@ -5,9 +5,13 @@ export interface IListBlog extends Pick<IBlog, "title" | "image"> {
   createdAt: string;
 }
 
-export interface IBlogDetails extends IListBlog{
-    content: string;
+export interface IBlogDetails extends IListBlog {
+  content: string;
 }
+
+export interface IUpdateBlog extends Partial<
+  Pick<IBlog, "title" | "content" | "image">
+> {}
 
 export interface IFindAllRepoRes {
   docs: IListBlog[];

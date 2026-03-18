@@ -1,5 +1,9 @@
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
-import { IBlogDetails, IListBlog } from "../../interfaces/blog.interface";
+import {
+  IBlogDetails,
+  IListBlog,
+  IUpdateBlog,
+} from "../../interfaces/blog.interface";
 import { IBlog, ICreateBlog } from "../../models/blog.model";
 import { QueryParamDto } from "../../schemas/query.schema";
 
@@ -21,5 +25,7 @@ export interface IBlogRepository {
 
   findOneJoined(id: string): Promise<IBlogDetails>;
 
-  softDeleteOneById(blogId: string, userId: string): Promise<boolean>
+  softDeleteOneById(blogId: string, userId: string): Promise<boolean>;
+
+  updateById(blogId: string, update: IUpdateBlog): Promise<IBlog | null>;
 }

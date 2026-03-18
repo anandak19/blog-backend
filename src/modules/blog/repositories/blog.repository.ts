@@ -7,6 +7,7 @@ import {
   IBlogDetails,
   IFindAllRepoRes,
   IListBlog,
+  IUpdateBlog,
 } from "../interfaces/blog.interface";
 import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
 import { AppError } from "@/shared/errors/app-error";
@@ -14,6 +15,18 @@ import { AppError } from "@/shared/errors/app-error";
 @injectable("Singleton")
 export class BlogRepository implements IBlogRepository {
   private readonly limit = 10;
+
+  async updateById(blogId: string, update: IUpdateBlog): Promise<IBlog | null> {
+    const updated = await blogModel.findByIdAndUpdate(
+      blogId,
+      {
+        $set: update,
+      },
+      { returnDocument: 'after' },
+    );
+
+    return updated;
+  }
 
   findOneByTitle(
     title: string,

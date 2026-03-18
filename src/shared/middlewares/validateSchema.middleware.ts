@@ -30,13 +30,16 @@ const ValidateSchema = (
       );
     }
 
-    const validated: IValidted = {};
+    let validated: IValidted = {};
+    if (req.validated) {
+      validated = req.validated;
+    }
 
     if (source === ValidationSource.QUERY) {
       validated.query = result.data;
     } else if (source === ValidationSource.BODY) {
       validated.body = result.data;
-    }else if (source === ValidationSource.PARAM) {
+    } else if (source === ValidationSource.PARAM) {
       validated.param = result.data;
     }
 

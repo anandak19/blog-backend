@@ -9,10 +9,13 @@ import { BLOG_TYPES } from "@/container/types";
 import { IBlogRepository } from "../repositories/interfaces/blog-repositories.interface";
 import { ICreateBlog } from "../models/blog.model";
 import {
-  IBaseResponse,
   IPaginatedResult,
 } from "@/shared/interfaces/http-response.interface";
-import { IBlogDetails, IListBlog } from "../interfaces/blog.interface";
+import {
+  IBlogDetails,
+  IListBlog,
+  IUpdateBlog,
+} from "../interfaces/blog.interface";
 import { QueryParamDto } from "../schemas/query.schema";
 
 @injectable()
@@ -22,8 +25,37 @@ export class BlogService implements IBlogService {
     @inject(BLOG_TYPES.BlogRepository) private _blogRepo: IBlogRepository,
   ) {}
 
-  async deleteOneById(blogId: string, userId: string): Promise<string> {
+  async updateOneById(
+    blogId: string,
+    userId: string,
+    update: CreateBlogDto,
+    file?: Express.Multer.File,
+  ): Promise<string> {
+    // -- with userId and blogId find the blogId, if not found throw error
 
+    let newKey!: string;
+    if (file) {
+      newKey = await this._s3Service.upload(file);
+    }
+
+    const updateBlog: IUpdateBlog = {
+      ...update,
+    };
+
+    if (file) {
+      updateBlog.image = newKey;
+    }
+
+    const updated = await this._blogRepo.updateById(blogId, updateBlog);
+
+    if (!updated) {
+      throw new AppError("Faild to update blog");
+    }
+
+    return "Blog Updated";
+  }
+
+  async deleteOneById(blogId: string, userId: string): Promise<string> {
     const isDeleted = await this._blogRepo.softDeleteOneById(blogId, userId);
     if (!isDeleted) {
       console.log("not del");

@@ -21,4 +21,11 @@ export interface IBlogService {
   findOneBlogDetails(id: string): Promise<IBlogDetails>;
 
   deleteOneById(blogId: string, userId: string): Promise<string>;
+
+  updateOneById(
+    blogId: string,
+    userId: string,
+    update: CreateBlogDto,
+    file?: Express.Multer.File,
+  ): Promise<string>;
 }
