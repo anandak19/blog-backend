@@ -48,8 +48,6 @@ export class UserBlogController {
   updateBlog = async (req: IAuthenticatedRequest, res: Response) => {
     const param = req.validated.param as ParamsDto;
     const blog = req.validated.body as CreateBlogDto;
-    console.log(param);
-    console.log(req.user);
     
     const result = await this._blogService.updateOneById(
       param.id,

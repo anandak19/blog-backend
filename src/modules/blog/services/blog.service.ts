@@ -66,7 +66,6 @@ export class BlogService implements IBlogService {
   async deleteOneById(blogId: string, userId: string): Promise<string> {
     const isDeleted = await this._blogRepo.softDeleteOneById(blogId, userId);
     if (!isDeleted) {
-      console.log("not del");
       throw new AppError("Blog Not Found", HTTP_STATUS.NOT_FOUND);
     }
 
