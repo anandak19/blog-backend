@@ -1,23 +1,16 @@
+import { USER_TYPES } from "@/container/types";
+import { IOtpCache, IUserCache } from "@/lib/cache/redis-service.interface";
+import { IEmailService } from "@/lib/email/email-service-interface";
+import { LIB_TYPES } from "@/lib/lib.types";
+import { IUserService } from "@/modules/user/services/interfaces/user-service.interface";
+import { generateOtpHtml } from "@/shared/constants/email-template";
+import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
+import { AppError } from "@/shared/errors/app-error";
 import { inject, injectable } from "inversify";
-import {
-  OptUpdatesDto,
-  OtpVarifyDto,
-  SignupDto,
-} from "../schemas/signup.schema";
-import { ISignupService } from "./interfaces/auth-services.interface";
-import { LIB_TYPES } from "../../../lib/lib.types";
-import {
-  IOtpCache,
-  IRedisService,
-  IUserCache,
-} from "../../../lib/cache/redis-service.interface";
-import { IEmailService } from "../../../lib/email/email-service-interface";
-import { generateOtpHtml } from "../../../shared/constants/email-template";
-import { USER_TYPES } from "../../../container/types";
-import { IUserService } from "../../user/services/interfaces/user-service.interface";
-import { AppError } from "../../../shared/errors/app-error";
-import { HTTP_STATUS } from "../../../shared/constants/http-status.constat";
 import { IOtpTimeLeft } from "../interfaces/response.interface";
+import { OptUpdatesDto, OtpVarifyDto, SignupDto } from "../schemas/signup.schema";
+import { ISignupService } from "./interfaces/auth-services.interface";
+
 
 @injectable()
 export class SignupService implements ISignupService {

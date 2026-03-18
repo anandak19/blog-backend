@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { HTTP_STATUS } from "../constants/http-status.constat";
-import { IErrorResponse } from "../interfaces/http-response.interface";
 import { AppError } from "../errors/app-error";
+import { IErrorResponse } from "../interfaces/http-response.interface";
+
 
 export const errorHandler = (
   err: AppError,

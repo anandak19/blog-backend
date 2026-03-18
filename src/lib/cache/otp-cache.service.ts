@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
-import { IOtpCache, IRedisService } from "./redis-service.interface";
 import { LIB_TYPES } from "../lib.types";
+import { IOtpCache, IRedisService } from "./redis-service.interface";
+
 
 @injectable("Request")
 export class OtpCacheService implements IOtpCache {

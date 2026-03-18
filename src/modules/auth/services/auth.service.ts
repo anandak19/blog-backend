@@ -1,16 +1,17 @@
+import { USER_TYPES } from "@/container/types";
+import { ICookieService } from "@/lib/cookie/cookie-service.interface";
+import { IJwtService } from "@/lib/jwt/jwt-service.interface";
+import { LIB_TYPES } from "@/lib/lib.types";
+import { IUserData } from "@/modules/user/interface/user.interface";
+import { IUserService } from "@/modules/user/services/interfaces/user-service.interface";
+import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
+import { AppError } from "@/shared/errors/app-error";
+import { IAuthenticatedRequest } from "@/shared/interfaces/overrides.interface";
 import { inject, injectable } from "inversify";
-import { IAuthService } from "./interfaces/auth-services.interface";
 import { LoginDto } from "../schemas/login.schema";
-import { AUTH_TYPES, USER_TYPES } from "../../../container/types";
-import { IUserService } from "../../user/services/interfaces/user-service.interface";
-import { LIB_TYPES } from "../../../lib/lib.types";
-import { IJwtService } from "../../../lib/jwt/jwt-service.interface";
-import { ICookieService } from "../../../lib/cookie/cookie-service.interface";
+import { IAuthService } from "./interfaces/auth-services.interface";
 import { Response } from "express";
-import { IAuthenticatedRequest } from "../../../shared/interfaces/overrides.interface";
-import { IUserData } from "../../user/interface/user.interface";
-import { AppError } from "../../../shared/errors/app-error";
-import { HTTP_STATUS } from "../../../shared/constants/http-status.constat";
+import { IBaseResponse } from "@/shared/interfaces/http-response.interface";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -29,7 +30,7 @@ export class AuthService implements IAuthService {
     return req.user;
   }
 
-  async login(res: Response, dto: LoginDto): Promise<string> {
+  async login(res: Response, dto: LoginDto): Promise<IUserData> {
     const user = await this._userService.comparePassword(dto);
     const token = this._jwtService.getSignedToken(
       user,
@@ -37,7 +38,7 @@ export class AuthService implements IAuthService {
     );
     this._cookieService.setCookie(res, token, this.tokenExpirationtime);
 
-    return "Login successfull";
+    return user;
   }
 
   logout(res: Response): string {

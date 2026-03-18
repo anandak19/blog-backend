@@ -1,18 +1,15 @@
+import { container } from "@/container/inversify.config";
+import { AUTH_TYPES } from "@/container/types";
+import { IJwtService } from "@/lib/jwt/jwt-service.interface";
+import { LIB_TYPES } from "@/lib/lib.types";
+import { authMiddleware } from "@/shared/middlewares/auth.middleware";
+import ValidateSchema from "@/shared/middlewares/validateSchema.middleware";
 import { Router } from "express";
-import { container } from "../../container/inversify.config";
-import { AUTH_TYPES } from "../../container/types";
-import { SignupController } from "./controllers/signup.controller";
-import ValidateSchema from "../../shared/middlewares/validateSchema.middleware";
-import {
-  optUpdatesSchema,
-  otpVarifySchema,
-  signupSchema,
-} from "./schemas/signup.schema";
 import { AuthController } from "./controllers/auth.controller";
+import { SignupController } from "./controllers/signup.controller";
 import { loginSchema } from "./schemas/login.schema";
-import { IJwtService } from "../../lib/jwt/jwt-service.interface";
-import { LIB_TYPES } from "../../lib/lib.types";
-import { authMiddleware } from "../../shared/middlewares/auth.middleware";
+import { signupSchema, otpVarifySchema, optUpdatesSchema } from "./schemas/signup.schema";
+
 
 const authRoute = Router();
 

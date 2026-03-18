@@ -1,10 +1,11 @@
+import { AUTH_TYPES } from "@/container/types";
 import { ContainerModule, ContainerModuleLoadOptions } from "inversify";
-import { SignupController } from "../controllers/signup.controller";
-import { AUTH_TYPES } from "../../../container/types";
-import { SignupService } from "../services/signup.service";
-import { IAuthService, ISignupService } from "../services/interfaces/auth-services.interface";
-import { AuthService } from "../services/auth.service";
 import { AuthController } from "../controllers/auth.controller";
+import { SignupController } from "../controllers/signup.controller";
+import { AuthService } from "../services/auth.service";
+import { ISignupService, IAuthService } from "../services/interfaces/auth-services.interface";
+import { SignupService } from "../services/signup.service";
+
 
 export const authBindings = new ContainerModule(
   (option: ContainerModuleLoadOptions) => {

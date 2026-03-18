@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
-import { SignupDto } from "../../modules/auth/schemas/signup.schema";
+import { SignupDto } from "@/modules/auth/schemas/signup.schema";
 import { LIB_TYPES } from "../lib.types";
-import { IRedisService, IUserCache } from "./redis-service.interface";
+import { IUserCache, IRedisService } from "./redis-service.interface";
+
 
 @injectable("Request")
 export class UserCacheService implements IUserCache {

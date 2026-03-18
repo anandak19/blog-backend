@@ -1,4 +1,4 @@
-import { SignupDto } from "../../modules/auth/schemas/signup.schema";
+import { SignupDto } from "@/modules/auth/schemas/signup.schema";
 
 export interface IRedisService {
   set(key: string, value: unknown, ttl?: number): Promise<void>;

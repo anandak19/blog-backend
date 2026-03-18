@@ -10,4 +10,6 @@ export const LIB_TYPES = {
   JwtService: Symbol.for("JwtService"),
 
   CookieService: Symbol.for("CookieService"),
+
+  S3Service: Symbol.for("S3Service"),
 };

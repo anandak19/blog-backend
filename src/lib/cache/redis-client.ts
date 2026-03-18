@@ -1,5 +1,5 @@
+import { appConfig } from "@/config/app.config";
 import { createClient } from "redis";
-import { appConfig } from "../../config/app.config";
 
 export const redisClient = createClient({
   username: appConfig.REDIS_USER,

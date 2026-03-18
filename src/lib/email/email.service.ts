@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { appConfig } from "../../config/app.config";
 import { IEmailService } from "./email-service-interface";
 import { emailTransport } from "./email-transport";
 import { ISendEmail } from "./email.interface";
 import * as nodemailer from "nodemailer";
+import { appConfig } from "@/config/app.config";
 
 @injectable()
 export class EmailService implements IEmailService {

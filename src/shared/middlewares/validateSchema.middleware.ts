@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import z from "zod";
 import { AppError } from "../errors/app-error";
 import { HTTP_STATUS } from "../constants/http-status.constat";
+import { IValidted } from "../global/global";
 
 export enum ValidationSource {
   BODY = "body",
@@ -29,7 +30,20 @@ const ValidateSchema = (
       );
     }
 
-    req[source] = result.data;
+    let validated: IValidted = {};
+    if (req.validated) {
+      validated = req.validated;
+    }
+
+    if (source === ValidationSource.QUERY) {
+      validated.query = result.data;
+    } else if (source === ValidationSource.BODY) {
+      validated.body = result.data;
+    } else if (source === ValidationSource.PARAM) {
+      validated.param = result.data;
+    }
+
+    req.validated = validated;
 
     next();
   };

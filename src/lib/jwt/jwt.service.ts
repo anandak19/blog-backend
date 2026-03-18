@@ -1,10 +1,10 @@
 import { StringValue } from "ms";
-import { IJwtService } from "./jwt-service.interface";
-import { appConfig } from "../../config/app.config";
 import jwt from "jsonwebtoken";
 import { injectable } from "inversify";
-import { AppError } from "../../shared/errors/app-error";
-import { HTTP_STATUS } from "../../shared/constants/http-status.constat";
+import { IJwtService } from "./jwt-service.interface";
+import { appConfig } from "@/config/app.config";
+import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
+import { AppError } from "@/shared/errors/app-error";
 
 @injectable()
 export class JwtService implements IJwtService {
@@ -30,10 +30,7 @@ export class JwtService implements IJwtService {
     try {
       return jwt.verify(token, this.JWT_SECRET) as R;
     } catch (error) {
-      throw new AppError(
-        "Invalid or expired token",
-        HTTP_STATUS.UNAUTHORIZED,
-      );
+      throw new AppError("Invalid or expired token", HTTP_STATUS.UNAUTHORIZED);
     }
   }
 }

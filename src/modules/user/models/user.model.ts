@@ -1,5 +1,5 @@
+import { ITimeStamp } from "@/shared/interfaces/db.interface";
 import { Document, Schema, model } from "mongoose";
-import { ITimeStamp } from "../../../shared/interfaces/db.interface";
 
 export interface IUser extends Document, ITimeStamp {
   firstName: string;

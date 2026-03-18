@@ -1,5 +1,5 @@
+import { appConfig } from "@/config/app.config";
 import nodemailer from "nodemailer";
-import { appConfig } from "../../config/app.config";
 
 export const emailTransport = () => {
   const transport = nodemailer.createTransport({
