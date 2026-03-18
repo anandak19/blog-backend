@@ -8,9 +8,7 @@ import { HTTP_STATUS } from "@/shared/constants/http-status.constat";
 import { BLOG_TYPES } from "@/container/types";
 import { IBlogRepository } from "../repositories/interfaces/blog-repositories.interface";
 import { ICreateBlog } from "../models/blog.model";
-import {
-  IPaginatedResult,
-} from "@/shared/interfaces/http-response.interface";
+import { IPaginatedResult } from "@/shared/interfaces/http-response.interface";
 import {
   IBlogDetails,
   IListBlog,
@@ -32,6 +30,16 @@ export class BlogService implements IBlogService {
     file?: Express.Multer.File,
   ): Promise<string> {
     // -- with userId and blogId find the blogId, if not found throw error
+
+    const isExistingTitle = await this._blogRepo.findOneByTitle(
+      update.title,
+      userId,
+      blogId,
+    );
+
+    if (isExistingTitle) {
+      throw new AppError("You alredy have a blog with this title");
+    }
 
     let newKey!: string;
     if (file) {
