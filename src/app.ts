@@ -12,7 +12,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:4200"],
+    origin: [
+      "http://localhost:4200",
+      "https://blog.urbantasker.online",
+      "https://www.blog.urbantasker.online",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   }),
