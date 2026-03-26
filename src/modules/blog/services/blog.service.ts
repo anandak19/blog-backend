@@ -15,6 +15,7 @@ import {
   IUpdateBlog,
 } from "../interfaces/blog.interface";
 import { QueryParamDto } from "../schemas/query.schema";
+import { BLOG_MESSAGES } from "../constants/blog-messages.constant";
 
 @injectable()
 export class BlogService implements IBlogService {
@@ -38,7 +39,7 @@ export class BlogService implements IBlogService {
     );
 
     if (isExistingTitle) {
-      throw new AppError("You alredy have a blog with this title");
+      throw new AppError(BLOG_MESSAGES.CREATE.TITLE_EXISTS);
     }
 
     let newKey!: string;
@@ -57,19 +58,19 @@ export class BlogService implements IBlogService {
     const updated = await this._blogRepo.updateById(blogId, updateBlog);
 
     if (!updated) {
-      throw new AppError("Faild to update blog");
+      throw new AppError(BLOG_MESSAGES.UPDATE.FAILED);
     }
 
-    return "Blog Updated";
+    return BLOG_MESSAGES.CREATE.SUCCESS;
   }
 
   async deleteOneById(blogId: string, userId: string): Promise<string> {
     const isDeleted = await this._blogRepo.softDeleteOneById(blogId, userId);
     if (!isDeleted) {
-      throw new AppError("Blog Not Found", HTTP_STATUS.NOT_FOUND);
+      throw new AppError(BLOG_MESSAGES.FETCH.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
     }
 
-    return "Blog Deleted";
+    return BLOG_MESSAGES.DELETE.SUCCESS;
   }
 
   async findAll(
@@ -98,7 +99,7 @@ export class BlogService implements IBlogService {
   async findOneBlogDetails(id: string): Promise<IBlogDetails> {
     const blog = await this._blogRepo.findOneJoined(id);
     if (!blog) {
-      throw new AppError("Blog Not found", HTTP_STATUS.NOT_FOUND);
+      throw new AppError(BLOG_MESSAGES.FETCH.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
     }
 
     const imageUrl = await this._s3Service.getSignedUrl(blog.image);
@@ -115,11 +116,11 @@ export class BlogService implements IBlogService {
     file: Express.Multer.File | undefined,
   ): Promise<string> {
     if (!file) {
-      throw new AppError("Image is required", HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(BLOG_MESSAGES.CREATE.IMAGE_REQUIRED, HTTP_STATUS.BAD_REQUEST);
     }
     const exist = await this._blogRepo.findOneByTitle(blogData.title, userId);
     if (exist) {
-      throw new AppError("You already have a blog with this title");
+      throw new AppError(BLOG_MESSAGES.CREATE.TITLE_EXISTS);
     }
 
     const key = await this._s3Service.upload(file);
@@ -133,9 +134,9 @@ export class BlogService implements IBlogService {
 
     const savedBlog = await this._blogRepo.create(createBlog);
     if (!savedBlog) {
-      throw new AppError("Error in saving blog");
+      throw new AppError(BLOG_MESSAGES.CREATE.ERROR);
     }
 
-    return "Blog Created";
+    return BLOG_MESSAGES.CREATE.SUCCESS;
   }
 }

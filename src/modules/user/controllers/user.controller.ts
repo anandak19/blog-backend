@@ -17,11 +17,6 @@ export class UserController {
     res.status(HTTP_STATUS.OK).json(users);
   };
 
-  // remvoe
-  create = (req: Request, res: Response) => {
-    this._userService.create(req.body);
-  };
-
   sampleReq(req: Request, res: Response) {
     throw new AppError("Sample", HTTP_STATUS.BAD_REQUEST);
     return ResponseHandler.success<{ name: string }>(res, { name: "deltaa" });

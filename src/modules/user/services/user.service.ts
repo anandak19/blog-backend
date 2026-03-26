@@ -10,6 +10,7 @@ import { IHashService } from "../../../lib/hash/hash-service.interface";
 import { LoginDto } from "../../auth/schemas/login.schema";
 import { UserMapper } from "../mappers/user.mapper";
 import { IUserData } from "../interface/user.interface";
+import { USER_MESSAGES } from "../constants/user-messages.constant";
 
 @injectable()
 export class UserService implements IUserService {
@@ -21,7 +22,7 @@ export class UserService implements IUserService {
   async comparePassword(loginDto: LoginDto): Promise<IUserData> {
     const user = await this._userRepo.findOneByEmail(loginDto.email);
     if (!user) {
-      throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
+      throw new AppError(USER_MESSAGES.AUTH.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
     }
 
     const isMatch = await this._hashService.comparePassword(
@@ -30,7 +31,7 @@ export class UserService implements IUserService {
     );
 
     if (!isMatch) {
-      throw new AppError("Incorrect Password", HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(USER_MESSAGES.AUTH.INCORRECT_PASSWORD, HTTP_STATUS.BAD_REQUEST);
     }
 
     return UserMapper.toUserDataRes(user)
@@ -44,7 +45,7 @@ export class UserService implements IUserService {
   async create(user: ICreateUser): Promise<void> {
     const isExists = await this.isEmailExists(user.email);
     if (isExists) {
-      throw new AppError("User exists", HTTP_STATUS.CONFLICT);
+      throw new AppError(USER_MESSAGES.CREATE.EXISTS, HTTP_STATUS.CONFLICT);
     }
 
     const hashedPassword = await this._hashService.hash(user.password);
@@ -58,7 +59,7 @@ export class UserService implements IUserService {
 
     if (!savedUser) {
       throw new AppError(
-        "Faild to create user",
+        USER_MESSAGES.CREATE.FAILED,
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }

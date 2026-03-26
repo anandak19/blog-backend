@@ -10,6 +10,7 @@ import { inject, injectable } from "inversify";
 import { IOtpTimeLeft } from "../interfaces/response.interface";
 import { OptUpdatesDto, OtpVarifyDto, SignupDto } from "../schemas/signup.schema";
 import { ISignupService } from "./interfaces/auth-services.interface";
+import { AUTH_MESSAGES } from "../constants/auth-messages.constant";
 
 
 @injectable()
@@ -40,7 +41,7 @@ export class SignupService implements ISignupService {
     const currUser = await this._userCache.getCacheUser(dto.email);
     if (!currUser) {
       throw new AppError(
-        "Signup session expired! Try agin",
+        AUTH_MESSAGES.SIGNUP.SESSION_EXPIRED,
         HTTP_STATUS.FORBIDDEN,
       );
     }
@@ -50,12 +51,12 @@ export class SignupService implements ISignupService {
     this._email.sendEmail({
       html: generateOtpHtml(otp),
       recipient: dto.email,
-      subject: "Varify Your Email",
+      subject: AUTH_MESSAGES.EMAIL_VERIFICATION.TITLE,
     });
 
     await this._otpCache.cacheOtp(dto.email, otp);
 
-    return "New otp is sent";
+    return AUTH_MESSAGES.OTP.RESENT;
   }
 
   // verify otp
@@ -63,39 +64,39 @@ export class SignupService implements ISignupService {
     const currUser = await this._userCache.getCacheUser(dto.email);
     if (!currUser) {
       throw new AppError(
-        "Signup session expired! Try agin",
+        AUTH_MESSAGES.SIGNUP.SESSION_EXPIRED,
         HTTP_STATUS.FORBIDDEN,
       );
     }
 
     const otp = await this._otpCache.getCachedOtp(dto.email);
     if (!otp) {
-      throw new AppError("Otp expired", HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(AUTH_MESSAGES.OTP.EXPIRED, HTTP_STATUS.BAD_REQUEST);
     }
 
     if (otp !== dto.otp) {
-      throw new AppError("Invalid Otp", HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(AUTH_MESSAGES.OTP.INVALID, HTTP_STATUS.BAD_REQUEST);
     }
 
     this._userCache.deleteUser(dto.email);
 
     await this._userService.create(currUser);
 
-    return "User signup success";
+    return AUTH_MESSAGES.SIGNUP.SUCCESS;
   }
 
   // varify user data and send otp
   async signup(user: SignupDto): Promise<string> {
     const exists = await this._userService.isEmailExists(user.email);
     if (exists) {
-      throw new AppError("User Exists", HTTP_STATUS.CONFLICT);
+      throw new AppError(AUTH_MESSAGES.SIGNUP.USER_EXISTS, HTTP_STATUS.CONFLICT);
     }
     const otp = this._generateOtp();
 
     this._email.sendEmail({
       html: generateOtpHtml(otp),
       recipient: user.email,
-      subject: "Varify Your Email",
+      subject: AUTH_MESSAGES.EMAIL_VERIFICATION.TITLE,
     });
 
     await Promise.all([
@@ -103,7 +104,7 @@ export class SignupService implements ISignupService {
       this._userCache.cacheUser(user.email, user),
     ]);
 
-    return "Otp sent";
+    return AUTH_MESSAGES.OTP.SENT;
   }
 
   private _generateOtp(): string {
