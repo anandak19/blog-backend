@@ -11,7 +11,7 @@ import { inject, injectable } from "inversify";
 import { LoginDto } from "../schemas/login.schema";
 import { IAuthService } from "./interfaces/auth-services.interface";
 import { Response } from "express";
-import { IBaseResponse } from "@/shared/interfaces/http-response.interface";
+import { AUTH_MESSAGES } from "../constants/auth-messages.constant";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -24,7 +24,7 @@ export class AuthService implements IAuthService {
 
   getLoginUser(req: IAuthenticatedRequest): IUserData {
     if (!req.user) {
-      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+      throw new AppError(AUTH_MESSAGES.LOGIN.UNAUTHORIZED, HTTP_STATUS.UNAUTHORIZED);
     }
 
     return req.user;
@@ -43,6 +43,6 @@ export class AuthService implements IAuthService {
 
   logout(res: Response): string {
     this._cookieService.clearCookie(res);
-    return "Logout Success";
+    return AUTH_MESSAGES.LOGIN.OUT_SUCCESS;
   }
 }
